@@ -1,7 +1,7 @@
 {
 	"name": "resting-squirrel-controller",
 	"version": "1.0.0",
-	"description": "",
+	"description": "Controller for defining endpoints in resting-squirrel.",
 	"main": "index.js",
 	"types": "./dist/index.d.ts",
 	"scripts": {
@@ -20,7 +20,8 @@
 		"create_nojekyll:linux:darwin": "touch ./docs/.nojekyll",
 		"docs_generate": "./node_modules/.bin/typedoc --out docs ./src",
 		"docs": "npm run clear_docs && npm run docs_generate && npm run create_nojekyll",
-		"test": "./node_modules/.bin/mocha -r ts-node/register __tests__/**/*.ts",
+		"test": "./node_modules/.bin/mocha -r ts-node/register __tests__/index.ts",
+		"test:app": "./node_modules/.bin/mocha -r ts-node/register __tests__/app.ts",
 		"start": "npm run clear && npm run build_ts && node -r source-map-support/register index.js",
 		"prepublish": "npm run clear && npm run build_ts",
 		"postpublish": "npm run clear"
@@ -51,5 +52,13 @@
 	"peerDependencies": {
 		"resting-squirrel": "^2.17.9",
 		"resting-squirrel-dto": "^1.0.0"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/zabkwak/resting-squirrel-controller.git"
+	},
+	"bugs": {
+		"url": "https://github.com/zabkwak/resting-squirrel-controller/issues"
+	},
+	"homepage": "https://github.com/zabkwak/resting-squirrel-controller#readme"
 }

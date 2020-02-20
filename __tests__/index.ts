@@ -1,76 +1,19 @@
 import { expect } from 'chai';
-import rs, { Error, Field, IRequest, RouteAuth, Type } from 'resting-squirrel';
+import * as path from 'path';
+import rs, { Error } from 'resting-squirrel';
 import RSConnector from 'resting-squirrel-connector';
-import { RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
 import Controller from '../src';
-import { get } from '../src/decorators/methods';
-import options from '../src/decorators/options';
-import version from '../src/decorators/version';
-
-class TestRequestDto extends RequestDto {
-
-	@RequestDto.integer
-	@RequestDto.required
-	public id: number;
-}
-
-// tslint:disable-next-line: max-classes-per-file
-class TestResponseDto extends RequestDto {
-
-	@ResponseDto.integer
-	public id: number;
-
-	@ResponseDto.string
-	public status: string;
-}
-
-// tslint:disable-next-line: max-classes-per-file
-@Controller.v(0)
-class TestController extends Controller {
-
-	@Controller.get('/test')
-	@Controller.params(TestRequestDto)
-	@Controller.auth(RouteAuth.REQUIRED)
-	@Controller.response(TestResponseDto)
-	public async getTest(req: IRequest<{}, TestRequestDto>): Promise<Partial<TestResponseDto>> {
-		return { status: 'get', id: req.query.id };
-	}
-
-	@Controller.put('/test')
-	@Controller.params(TestRequestDto)
-	@Controller.auth(RouteAuth.REQUIRED)
-	@Controller.response(TestResponseDto)
-	public async createTest(req: IRequest<{}, {}, TestRequestDto>): Promise<Partial<TestResponseDto>> {
-		return { status: 'put', id: req.body.id };
-	}
-
-	@Controller.post('/test/:id')
-	@Controller.params(TestRequestDto)
-	@Controller.auth(RouteAuth.REQUIRED)
-	@Controller.response(TestResponseDto)
-	@Controller.args([new Field('id', Type.integer)])
-	public async updateTest(req: IRequest<{}, {}, TestRequestDto>): Promise<Partial<TestResponseDto>> {
-		return { status: 'post', id: req.body.id };
-	}
-
-	@Controller.delete('/test/:id')
-	@Controller.params(TestRequestDto)
-	@Controller.auth(RouteAuth.REQUIRED)
-	@Controller.emptyResponse
-	@Controller.args([new Field('id', Type.integer)])
-	public async deleteTest(req: IRequest<{}, {}, TestRequestDto>): Promise<null> {
-		return null;
-	}
-}
 
 const app = rs({ log: false, responseStrictValidation: true });
-
-new TestController(app).register();
 
 const api = RSConnector({ url: 'http://localhost:8080' });
 
 describe('Server process', () => {
+
+	it('registers the controllers', async () => {
+		await Controller.registerDirectory(app, path.resolve(__dirname, './data/controllers'));
+	});
 
 	it('starts the server', (done) => app.start(done));
 
@@ -171,6 +114,13 @@ describe('Server process', () => {
 			expect(error.statusCode).to.be.equal(401);
 			expect(error.meta).to.be.an('object');
 		}
+	});
+
+	it('calls the endpoint without version', async () => {
+		const r = await api.get('/no-version');
+		expect(r.statusCode).to.be.equal(204);
+		// tslint:disable-next-line: no-unused-expression
+		expect(r.isEmpty()).to.be.true;
 	});
 
 	it('stops the server', (done) => app.stop(done));
