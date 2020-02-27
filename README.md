@@ -14,7 +14,7 @@ npm install resting-squirrel-controller --save
 
 import rs, { Field, IRequest, RouteAuth, Type } from 'resting-squirrel'; // peer dependency
 import Controller from 'resting-squirrel-controller';
-import { RequestDto, ResponseDto } from 'resting-squirrel-dto'; // peer dependency
+import RSDto, { RequestDto, ResponseDto } from 'resting-squirrel-dto'; // peer dependency
 
 class TestRequestDto extends RequestDto {
 
@@ -32,13 +32,23 @@ class TestResponseDto extends RequestDto {
 	public status: string;
 }
 
+class TestDto extends RSDto {
+
+	@RSDto.integer
+	@RSDto.required
+	public id: number;
+
+	@RSDto.string
+	@RSDto.response
+	public status: string;
+}
+
 @Controller.v(0)
 class TestController extends Controller {
 
 	@Controller.get('/test')
-	@Controller.params(TestRequestDto)
+	@Controller.dto(TestDto)
 	@Controller.auth(RouteAuth.REQUIRED)
-	@Controller.response(TestResponseDto)
 	public async getTest(req: IRequest<{}, TestRequestDto>): Promise<Partial<TestResponseDto>> {
 		return { status: 'get', id: req.query.id };
 	}
@@ -109,8 +119,9 @@ Sets the options to the endpoint.
 ###### `option<K extends keyof IRouteOptions>(option: K, value: IRouteOptions[K])`
 Sets specific option to the endpoint.
 ###### `auth(auth: RouteAuth)`
-###### `params(params: typeof RequestDto)`
-###### `response(response: typeof ResponseDto)`
+###### `dto(dto: typeof BaseDto)`
+###### `params(params: typeof BaseDto | typeof RequestDto)`
+###### `response(response: typeof BaseDto | typeof ResponseDto)`
 ###### `errors(errors: Array<ErrorField>)`
 ###### `description(description: string)`
 ###### `hideDocs`

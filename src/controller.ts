@@ -1,6 +1,19 @@
 import * as path from 'path';
-import { Application, Endpoint, ErrorField, Field, IRequest, IRouteOptions, RouteAuth } from 'resting-squirrel';
-import { ArgsDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
+import {
+	Application,
+	Endpoint,
+	ErrorField,
+	Field,
+	FieldShape,
+	FieldShapeArray,
+	IRequest,
+	IRouteOptions,
+	Param,
+	ParamShape,
+	ParamShapeArray,
+	RouteAuth,
+} from 'resting-squirrel';
+import BaseDto, { ArgsDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
 import deprecated from './decorators/deprecated';
 import { del, get, post, put } from './decorators/methods';
@@ -87,12 +100,14 @@ export default class Controller {
 	/**
 	 * Sets the `params` option to the endpoint using DTO classes.
 	 */
-	public static params = (params: typeof RequestDto) => Controller.options({ params });
+	public static params = (params: typeof BaseDto | typeof RequestDto) => Controller.options({ params });
 
 	/**
 	 * Set the `response` option to the endpoint using DTO classes.
 	 */
-	public static response = (response: typeof ResponseDto) => Controller.options({ response });
+	public static response = (response: typeof BaseDto | typeof ResponseDto) => Controller.options({ response });
+
+	public static dto = (dto: typeof BaseDto) => Controller.options({ params: dto, response: dto });
 
 	/**
 	 * Sets the `errors` option to the endpoint.
@@ -229,8 +244,8 @@ export default class Controller {
 					? args
 					: args.toArray() as Array<Field>
 				: undefined,
-			params: params ? params.toArray() : undefined,
-			response: response ? response.toArray() : undefined,
+			params: this._getParamsArray(params),
+			response: this._getResponseArray(params),
 		};
 	}
 
@@ -241,6 +256,26 @@ export default class Controller {
 		}
 		return t.__deprecated__.includes(propertyKey);
 
+	}
+
+	private _getParamsArray(params: typeof BaseDto | typeof RequestDto): Array<Param | ParamShape | ParamShapeArray> {
+		if (!params) {
+			return undefined;
+		}
+		if (params.prototype instanceof RequestDto) {
+			return (params as typeof RequestDto).toArray();
+		}
+		return (params as typeof BaseDto).toParams();
+	}
+
+	private _getResponseArray(params: typeof BaseDto | typeof ResponseDto): Array<Field | FieldShape | FieldShapeArray> {
+		if (!params) {
+			return undefined;
+		}
+		if (params.prototype instanceof ResponseDto) {
+			return (params as typeof ResponseDto).toArray();
+		}
+		return (params as typeof BaseDto).toResponse();
 	}
 
 }
