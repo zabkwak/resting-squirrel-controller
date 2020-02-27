@@ -249,7 +249,7 @@ export default class Controller {
 					: args.toArray() as Array<Field>
 				: undefined,
 			params: this._getParamsArray(params),
-			response: this._getResponseArray(params),
+			response: this._getResponseArray(response),
 		};
 	}
 
@@ -272,14 +272,14 @@ export default class Controller {
 		return (params as typeof BaseDto).toParams();
 	}
 
-	private _getResponseArray(params: typeof BaseDto | typeof ResponseDto): Array<Field | FieldShape | FieldShapeArray> {
-		if (!params) {
+	private _getResponseArray(response: typeof BaseDto | typeof ResponseDto): Array<Field | FieldShape | FieldShapeArray> {
+		if (!response) {
 			return undefined;
 		}
-		if (params.prototype instanceof ResponseDto) {
-			return (params as typeof ResponseDto).toArray();
+		if (response.prototype instanceof ResponseDto) {
+			return (response as typeof ResponseDto).toArray();
 		}
-		return (params as typeof BaseDto).toResponse();
+		return (response as typeof BaseDto).toResponse();
 	}
 
 }
