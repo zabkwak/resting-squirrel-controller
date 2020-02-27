@@ -176,9 +176,13 @@ export default class Controller {
 				await this.registerDirectory(app, filename);
 				continue;
 			}
-			const M = requireModule<typeof Controller>(filename);
-			if (M && M.prototype && M.prototype instanceof this) {
-				M.register(app);
+			try {
+				const M = requireModule<typeof Controller>(filename);
+				if (M && M.prototype && M.prototype instanceof this) {
+					M.register(app);
+				}
+			} catch (e) {
+				// Skip if module cannot be required
 			}
 		}
 	}
