@@ -67,6 +67,11 @@ export default class TestController extends Controller {
 	@Controller.emptyResponse
 	@Controller.args([new Field('id', Type.integer)])
 	public async deleteTest(req: IRequest<{}, {}, TestRequestDto>): Promise<null> {
+		this._log();
 		return null;
+	}
+
+	private _log(): void {
+		console.log(this);
 	}
 }
