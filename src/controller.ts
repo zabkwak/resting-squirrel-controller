@@ -273,6 +273,9 @@ export default class Controller {
 	}
 
 	private _getResponseArray(response: typeof BaseDto | typeof ResponseDto): Array<Field | FieldShape | FieldShapeArray> {
+		if (response === null) {
+			return null;
+		}
 		if (!response) {
 			return undefined;
 		}

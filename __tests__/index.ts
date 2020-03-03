@@ -5,6 +5,8 @@ import RSConnector from 'resting-squirrel-connector';
 
 import Controller from '../src';
 
+RSConnector.cacheTTL = 0;
+
 const app = rs({ log: false, responseStrictValidation: true });
 
 const api = RSConnector({ url: 'http://localhost:8080' });
