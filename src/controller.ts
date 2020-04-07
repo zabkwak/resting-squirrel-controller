@@ -103,11 +103,16 @@ export default class Controller {
 	public static params = (params: typeof BaseDto | typeof RequestDto) => Controller.options({ params });
 
 	/**
-	 * Set the `response` option to the endpoint using DTO classes.
+	 * Sets the `response` option to the endpoint using DTO classes.
 	 */
 	public static response = (response: typeof BaseDto | typeof ResponseDto) => Controller.options({ response });
 
-	public static dto = (dto: typeof BaseDto) => Controller.options({ params: dto, response: dto });
+	/**
+	 * Sets the `params` and `response` options to the endpoint using DTO classes.
+	 */
+	public static dto = (
+		dto: typeof BaseDto, optionalParams: Array<string> = [],
+	) => Controller.options({ params: dto, response: dto, optionalParams })
 
 	/**
 	 * Sets the `errors` option to the endpoint.
@@ -240,15 +245,15 @@ export default class Controller {
 			return {};
 		}
 		const options = t.__options__[propertyKey];
-		const { args, params, response } = options;
+		const { args, params, response, optionalParams, ...restOptions } = options;
 		return {
-			...options,
+			...restOptions,
 			args: args
 				? args instanceof Array
 					? args
 					: args.toArray() as Array<Field>
 				: undefined,
-			params: this._getParamsArray(params),
+			params: this._getParamsArray(params, optionalParams),
 			response: this._getResponseArray(response),
 		};
 	}
@@ -262,14 +267,17 @@ export default class Controller {
 
 	}
 
-	private _getParamsArray(params: typeof BaseDto | typeof RequestDto): Array<Param | ParamShape | ParamShapeArray> {
+	private _getParamsArray(
+		params: typeof BaseDto | typeof RequestDto,
+		optional: Array<string> = [],
+	): Array<Param | ParamShape | ParamShapeArray> {
 		if (!params) {
 			return undefined;
 		}
 		if (params.prototype instanceof RequestDto) {
 			return (params as typeof RequestDto).toArray();
 		}
-		return (params as typeof BaseDto).toParams();
+		return (params as typeof BaseDto).toParams(optional);
 	}
 
 	private _getResponseArray(response: typeof BaseDto | typeof ResponseDto): Array<Field | FieldShape | FieldShapeArray> {

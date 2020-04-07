@@ -15,6 +15,7 @@ export interface IOptions<IProps = { [key: string]: any }> {
 	excludeApiKeys: (() => Promise<Array<string>>) | Array<string>;
 	timeout: number;
 	props: IProps;
+	optionalParams?: Array<string>;
 }
 
 export default (options: Partial<IOptions>) => {
