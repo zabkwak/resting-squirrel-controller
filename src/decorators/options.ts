@@ -15,7 +15,7 @@ export interface IOptions<IProps = { [key: string]: any }> {
 	excludeApiKeys: (() => Promise<Array<string>>) | Array<string>;
 	timeout: number;
 	props: IProps;
-	optionalParams?: Array<string>;
+	optionalParams: Array<string>;
 }
 
 export default (options: Partial<IOptions>) => {
@@ -24,9 +24,17 @@ export default (options: Partial<IOptions>) => {
 		if (!t.__options__) {
 			t.__options__ = {};
 		}
+		let props = t.__options__[propertyKey]?.props;
+		if (options.props) {
+			props = {
+				...props,
+				...options.props,
+			};
+		}
 		t.__options__[propertyKey] = {
 			...t.__options__[propertyKey],
 			...options,
+			props,
 		};
 		return descriptor;
 	};

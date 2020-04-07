@@ -125,5 +125,15 @@ describe('Server process', () => {
 		expect(r.isEmpty()).to.be.true;
 	});
 
+	it('calls the endpoint with multiple defined props', async () => {
+		const r = await api.v(0).get('/props');
+		expect(r.statusCode).to.be.equal(200);
+		expect(r.data).to.be.deep.equal({
+			prop01: 'prop_01',
+			prop02: 'prop_02',
+		});
+
+	});
+
 	it('stops the server', (done) => app.stop(done));
 });
