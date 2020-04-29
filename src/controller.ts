@@ -100,7 +100,9 @@ export default class Controller {
 	/**
 	 * Sets the `params` option to the endpoint using DTO classes.
 	 */
-	public static params = (params: typeof BaseDto | typeof RequestDto) => Controller.options({ params });
+	public static params = (
+		params: typeof BaseDto | typeof RequestDto, optionalParams: Array<string> = [],
+	) => Controller.options({ params, optionalParams })
 
 	/**
 	 * Sets the `response` option to the endpoint using DTO classes.
@@ -275,7 +277,7 @@ export default class Controller {
 			return undefined;
 		}
 		if (params.prototype instanceof RequestDto) {
-			return (params as typeof RequestDto).toArray();
+			return (params as typeof RequestDto).toArray(optional);
 		}
 		return (params as typeof BaseDto).toParams(optional);
 	}
