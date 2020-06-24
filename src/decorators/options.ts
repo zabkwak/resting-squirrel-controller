@@ -1,5 +1,5 @@
 import { ErrorField, Field, IRequest, RouteAuth } from 'resting-squirrel';
-import BaseDto, { ArgsDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
+import { ArgsDto, BaseDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
 import Controller, { IStore } from '../controller';
 

@@ -13,7 +13,7 @@ import {
 	ParamShapeArray,
 	RouteAuth,
 } from 'resting-squirrel';
-import BaseDto, { ArgsDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
+import RSDto, { ArgsDto, BaseDto, IRSDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
 import deprecated from './decorators/deprecated';
 import { del, get, post, put } from './decorators/methods';

@@ -1,6 +1,6 @@
 
 import { Field, IRequest, RouteAuth, Type } from 'resting-squirrel';
-import BaseDto, { RequestDto, ResponseDto } from 'resting-squirrel-dto';
+import { BaseDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
 import Controller from '../../../src';
 
