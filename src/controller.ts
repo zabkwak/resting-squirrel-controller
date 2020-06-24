@@ -17,7 +17,7 @@ import RSDto, { ArgsDto, BaseDto, IRSDto, RequestDto, ResponseDto } from 'restin
 
 import deprecated from './decorators/deprecated';
 import { del, get, post, put } from './decorators/methods';
-import optionsDecorator, { IOptions } from './decorators/options';
+import optionsDecorator, { IOptions, RSDtoType } from './decorators/options';
 import versionDecorator from './decorators/version';
 
 import { fs, requireModule } from './utils';
@@ -101,20 +101,28 @@ export default class Controller {
 	 * Sets the `params` option to the endpoint using DTO classes.
 	 */
 	public static params = (
-		params: typeof BaseDto | typeof RequestDto, optionalParams: Array<string> = [],
-	) => Controller.options({ params, optionalParams })
+		params: RSDtoType | typeof BaseDto | typeof RequestDto,
+		optionalParams: Array<string> = [],
+		omit: Array<string> = [],
+	) => Controller.options({ params, optionalParams, omitParams: omit })
 
 	/**
 	 * Sets the `response` option to the endpoint using DTO classes.
 	 */
-	public static response = (response: typeof BaseDto | typeof ResponseDto) => Controller.options({ response });
+	public static response = (
+		response: RSDtoType | typeof BaseDto | typeof ResponseDto,
+		omit: Array<string> = [],
+	) => Controller.options({ response, omitResponse: omit })
 
 	/**
 	 * Sets the `params` and `response` options to the endpoint using DTO classes.
 	 */
 	public static dto = (
-		dto: typeof BaseDto, optionalParams: Array<string> = [],
-	) => Controller.options({ params: dto, response: dto, optionalParams })
+		dto: RSDtoType | typeof BaseDto,
+		optionalParams: Array<string> = [],
+		omitParams: Array<string> = [],
+		omitResponse: Array<string> = [],
+	) => Controller.options({ params: dto, response: dto, optionalParams, omitParams, omitResponse })
 
 	/**
 	 * Sets the `errors` option to the endpoint.
@@ -247,7 +255,7 @@ export default class Controller {
 			return {};
 		}
 		const options = t.__options__[propertyKey];
-		const { args, params, response, optionalParams, ...restOptions } = options;
+		const { args, params, response, optionalParams, omitParams, omitResponse, ...restOptions } = options;
 		return {
 			...restOptions,
 			args: args
@@ -255,8 +263,8 @@ export default class Controller {
 					? args
 					: args.toArray() as Array<Field>
 				: undefined,
-			params: this._getParamsArray(params, optionalParams),
-			response: this._getResponseArray(response),
+			params: this._getParamsArray(params, optionalParams, omitParams),
+			response: this._getResponseArray(response, omitResponse),
 		};
 	}
 
@@ -270,8 +278,9 @@ export default class Controller {
 	}
 
 	private _getParamsArray(
-		params: typeof BaseDto | typeof RequestDto,
+		params: RSDtoType | typeof BaseDto | typeof RequestDto,
 		optional: Array<string> = [],
+		omit: Array<string> = [],
 	): Array<Param | ParamShape | ParamShapeArray> {
 		if (!params) {
 			return undefined;
@@ -279,10 +288,13 @@ export default class Controller {
 		if (params.prototype instanceof RequestDto) {
 			return (params as typeof RequestDto).toArray(optional);
 		}
-		return (params as typeof BaseDto).toParams(optional);
+		return RSDto.toParams(params, optional);
 	}
 
-	private _getResponseArray(response: typeof BaseDto | typeof ResponseDto): Array<Field | FieldShape | FieldShapeArray> {
+	private _getResponseArray(
+		response: RSDtoType | typeof BaseDto | typeof ResponseDto,
+		omit: Array<string> = [],
+	): Array<Field | FieldShape | FieldShapeArray> {
 		if (response === null) {
 			return null;
 		}
@@ -292,7 +304,7 @@ export default class Controller {
 		if (response.prototype instanceof ResponseDto) {
 			return (response as typeof ResponseDto).toArray();
 		}
-		return (response as typeof BaseDto).toResponse();
+		return RSDto.toResponse(response);
 	}
 
 }

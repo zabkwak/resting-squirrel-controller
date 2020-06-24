@@ -9,7 +9,88 @@ npm install resting-squirrel-controller --save
 
 ## Usage
 ### Javascript
+TBD
 ### Typescript
+#### DTO
+```typescript
+
+import rs, { Field, IRequest, RouteAuth, Type } from 'resting-squirrel'; // peer dependency
+import Controller from 'resting-squirrel-controller';
+import RSDto, { IRSDto } from 'resting-squirrel-dto'; // peer dependency
+
+class TestRequestDto implements IRSDto {
+
+	@RequestDto.integer
+	@RequestDto.required
+	public id: number;
+}
+
+class TestResponseDto implements IRSDto {
+
+	@ResponseDto.integer
+	public id: number;
+
+	@ResponseDto.string
+	public status: string;
+}
+
+class TestDto implements IRSDto {
+
+	@RSDto.integer
+	@RSDto.required
+	public id: number;
+
+	@RSDto.string
+	@RSDto.response
+	public status: string;
+}
+
+@Controller.v(0)
+class TestController extends Controller {
+
+	@Controller.get('/test')
+	@Controller.dto(TestDto)
+	@Controller.auth(RouteAuth.REQUIRED)
+	public async getTest(req: IRequest<{}, TestRequestDto>): Promise<Partial<TestResponseDto>> {
+		return { status: 'get', id: req.query.id };
+	}
+
+	@Controller.put('/test')
+	@Controller.params(TestRequestDto)
+	@Controller.auth(RouteAuth.REQUIRED)
+	@Controller.response(TestResponseDto)
+	public async createTest(req: IRequest<{}, {}, TestRequestDto>): Promise<Partial<TestResponseDto>> {
+		return { status: 'put', id: req.body.id };
+	}
+
+	@Controller.post('/test/:id')
+	@Controller.params(TestRequestDto)
+	@Controller.auth(RouteAuth.REQUIRED)
+	@Controller.response(TestResponseDto)
+	@Controller.args([new Field('id', Type.integer)])
+	public async updateTest(req: IRequest<{}, {}, TestRequestDto>): Promise<Partial<TestResponseDto>> {
+		return { status: 'post', id: req.body.id };
+	}
+
+	@Controller.delete('/test/:id')
+	@Controller.params(TestRequestDto)
+	@Controller.auth(RouteAuth.REQUIRED)
+	@Controller.emptyResponse
+	@Controller.args([new Field('id', Type.integer)])
+	public async deleteTest(req: IRequest<{}, {}, TestRequestDto>): Promise<null> {
+		return null;
+	}
+}
+
+const app = rs();
+
+new TestController(app).register();
+
+app.start();
+
+```
+
+#### DTO Legacy
 ```typescript
 
 import rs, { Field, IRequest, RouteAuth, Type } from 'resting-squirrel'; // peer dependency
@@ -120,8 +201,8 @@ Sets the options to the endpoint.
 Sets specific option to the endpoint.
 ###### `auth(auth: RouteAuth)`
 ###### `dto(dto: typeof BaseDto)`
-###### `params(params: typeof BaseDto | typeof RequestDto)`
-###### `response(response: typeof BaseDto | typeof ResponseDto)`
+###### `params(params: (new (...args: any[]) => IRSDto) | typeof BaseDto | typeof RequestDto)`
+###### `response(response: (new (...args: any[]) => IRSDto) | typeof BaseDto | typeof ResponseDto)`
 ###### `errors(errors: Array<ErrorField>)`
 ###### `description(description: string)`
 ###### `hideDocs`
@@ -133,3 +214,6 @@ Sets the `hideDocs` option to `true`.
 ###### `<IProps = {[key: string]: any}>props(props: IProps)`
 ###### `emptyResponse`
 Sets the endpoint as empty. It returns 204 status code.
+
+## Migration to v2
+There are no breaking changes in the v2 except the peer dependency on the `resting-squirrel-dto` module.
