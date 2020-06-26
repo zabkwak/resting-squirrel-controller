@@ -286,9 +286,9 @@ export default class Controller {
 			return undefined;
 		}
 		if (params.prototype instanceof RequestDto) {
-			return (params as typeof RequestDto).toArray(optional);
+			return (params as typeof RequestDto).toArray(optional, omit);
 		}
-		return RSDto.toParams(params, optional);
+		return RSDto.toParams(params, optional, omit);
 	}
 
 	private _getResponseArray(
@@ -304,7 +304,7 @@ export default class Controller {
 		if (response.prototype instanceof ResponseDto) {
 			return (response as typeof ResponseDto).toArray();
 		}
-		return RSDto.toResponse(response);
+		return RSDto.toResponse(response, omit);
 	}
 
 }
