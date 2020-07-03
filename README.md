@@ -183,6 +183,8 @@ Decorators for the `Controller` class.
 Sets the version of all endpoint in the `Controller`.
 ###### `v(version: number)`
 Alias for `version` decorator.
+###### `controllerOptions(options: IRouteOptions)`
+Class decorator to set some of route options to all endpoints.
 ##### Method
 Decorators for the `Controller` methods defining endpoint.
 ###### `put(route: string)`
@@ -217,3 +219,7 @@ Sets the endpoint as empty. It returns 204 status code.
 
 ## Migration to v2
 There are no breaking changes in the v2 except the peer dependency on the `resting-squirrel-dto` module.
+
+## TODO
+### v3
+- Replace deprecated static endpoint decorators with controller decorators.

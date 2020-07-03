@@ -4,6 +4,8 @@ import { BaseDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
 import Controller from '../../../src';
 
+import controllerOptions from '../../../src/decorators/controller-options';
+
 class TestRequestDto extends RequestDto {
 
 	@RequestDto.integer
@@ -35,9 +37,10 @@ class TestDto extends BaseDto {
 
 // tslint:disable-next-line: max-classes-per-file
 @Controller.v(0)
+@Controller.controllerOptions({ auth: RouteAuth.OPTIONAL, props: { test: 'test' } })
 export default class TestController extends Controller {
 
-	@Controller.get('/test')
+	@Controller.Endpoint.get('/test')
 	@Controller.dto(TestDto)
 	@Controller.auth(RouteAuth.REQUIRED)
 	public async getTest(req: IRequest<{}, TestRequestDto>): Promise<Partial<TestResponseDto>> {

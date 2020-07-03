@@ -15,6 +15,7 @@ import {
 } from 'resting-squirrel';
 import RSDto, { ArgsDto, BaseDto, IRSDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
+import controllerOptions, { IOptions as IControllerOptions } from './decorators/controller-options';
 import deprecated from './decorators/deprecated';
 import { del, get, post, put } from './decorators/methods';
 import optionsDecorator, { IOptions, RSDtoType } from './decorators/options';
@@ -35,27 +36,7 @@ export interface IEndpoint {
 	propertyKey: string;
 }
 
-export default class Controller {
-
-	// #region Decorators
-
-	/**
-	 * Sets the version to the `Controller` class. All endpoints will have this version.
-	 */
-	public static version = versionDecorator;
-
-	/**
-	 * @alias version
-	 */
-	public static v = Controller.version;
-
-	/**
-	 * Marks the endpoint on the method as deprecated.
-	 */
-	public static deprecated = deprecated;
-
-	// #region Methods
-
+class E {
 	/**
 	 * The endpoint is executed with `PUT` method.
 	 */
@@ -76,10 +57,6 @@ export default class Controller {
 	 */
 	public static delete = del;
 
-	// #endregion
-
-	// #region Options
-
 	/**
 	 * Defines options to the endpoint.
 	 */
@@ -90,15 +67,168 @@ export default class Controller {
 	 */
 	public static option = <K extends keyof IOptions>(
 		option: K, value: IOptions[K],
+	) => E.options({ [option]: value })
+
+	/**
+	 * Sets the `auth` option of the endpoint.
+	 */
+	public static auth = (auth: RouteAuth) => E.options({ auth });
+
+	/**
+	 * Sets the `params` option to the endpoint using DTO classes.
+	 */
+	public static params = (
+		params: RSDtoType | typeof BaseDto | typeof RequestDto,
+		optionalParams: Array<string> = [],
+		omit: Array<string> = [],
+	) => E.options({ params, optionalParams, omitParams: omit })
+
+	/**
+	 * Sets the `response` option to the endpoint using DTO classes.
+	 */
+	public static response = (
+		response: RSDtoType | typeof BaseDto | typeof ResponseDto,
+		omit: Array<string> = [],
+	) => E.options({ response, omitResponse: omit })
+
+	/**
+	 * Sets the `params` and `response` options to the endpoint using DTO classes.
+	 */
+	public static dto = (
+		dto: RSDtoType | typeof BaseDto,
+		optionalParams: Array<string> = [],
+		omitParams: Array<string> = [],
+		omitResponse: Array<string> = [],
+	) => E.options({ params: dto, response: dto, optionalParams, omitParams, omitResponse })
+
+	/**
+	 * Sets the `errors` option to the endpoint.
+	 */
+	public static errors = (errors: Array<ErrorField>) => E.options({ errors });
+
+	/**
+	 * Sets the `description` option to the endpoint.
+	 */
+	public static description = (description: string) => E.options({ description });
+
+	/**
+	 * Sets the `hideDocs` option to `true` to the endpoint.
+	 */
+	// tslint:disable-next-line: member-ordering
+	public static hideDocs = E.option('hideDocs', true);
+
+	/**
+	 * Sets the `args` option to the endpoint.
+	 */
+	public static args = (args: Array<Field> | typeof ArgsDto) => E.options({ args });
+
+	/**
+	 * Sets the `requireApiKey` option to the endpoint.
+	 */
+	public static requireApiKey = (requireApiKey: boolean) => E.options({ requireApiKey });
+
+	/**
+	 * Sets the `excludeApiKey` option to the endpoint.
+	 */
+	public static excludeApiKeys = (excludeApiKeys: (
+		() => Promise<Array<string>>) | Array<string>,
+	) => E.options({ excludeApiKeys })
+
+	/**
+	 * Sets the `timeout` option to the endpoint.
+	 */
+	public static timeout = (timeout: number) => E.options({ timeout });
+
+	/**
+	 * Sets the `props` option to the endpoint.
+	 */
+	public static props = <IProps = { [key: string]: any }>(props: IProps) => E.options({ props });
+
+	/**
+	 * Sets the endpoint as empty. It returns 204 status code.
+	 */
+	// tslint:disable-next-line: member-ordering
+	public static emptyResponse = E.response(null);
+}
+
+// tslint:disable-next-line: max-classes-per-file
+export default class Controller {
+
+	// #region Decorators
+
+	/**
+	 * Sets the version to the `Controller` class. All endpoints will have this version.
+	 */
+	public static version = versionDecorator;
+
+	/**
+	 * @alias version
+	 */
+	public static v = Controller.version;
+
+	public static controllerOptions = controllerOptions;
+
+	public static Endpoint = E;
+
+	/**
+	 * Marks the endpoint on the method as deprecated.
+	 * @deprecated
+	 */
+	public static deprecated = deprecated;
+
+	// #region Methods
+
+	/**
+	 * The endpoint is executed with `PUT` method.
+	 * @deprecated
+	 */
+	public static put = put;
+
+	/**
+	 * The endpoint is executed with `GET` method.
+	 * @deprecated
+	 */
+	public static get = get;
+
+	/**
+	 * The endpoint is executed with `POST` method.
+	 * @deprecated
+	 */
+	public static post = post;
+
+	/**
+	 * The endpoint is executed with `DELETE` method.
+	 * @deprecated
+	 */
+	public static delete = del;
+
+	// #endregion
+
+	// #region Options
+
+	/**
+	 * Defines options to the endpoint.
+	 * @deprecated
+	 */
+	public static options = optionsDecorator;
+
+	/**
+	 * Define specific option to the endpoint.
+	 * @deprecated
+	 */
+	public static option = <K extends keyof IOptions>(
+		option: K, value: IOptions[K],
 	) => Controller.options({ [option]: value })
 
 	/**
 	 * Sets the `auth` option of the endpoint.
+	 * @deprecated
 	 */
 	public static auth = (auth: RouteAuth) => Controller.options({ auth });
 
 	/**
 	 * Sets the `params` option to the endpoint using DTO classes.
+	 * @deprecated
 	 */
 	public static params = (
 		params: RSDtoType | typeof BaseDto | typeof RequestDto,
@@ -108,6 +238,7 @@ export default class Controller {
 
 	/**
 	 * Sets the `response` option to the endpoint using DTO classes.
+	 * @deprecated
 	 */
 	public static response = (
 		response: RSDtoType | typeof BaseDto | typeof ResponseDto,
@@ -116,6 +247,7 @@ export default class Controller {
 
 	/**
 	 * Sets the `params` and `response` options to the endpoint using DTO classes.
+	 * @deprecated
 	 */
 	public static dto = (
 		dto: RSDtoType | typeof BaseDto,
@@ -126,32 +258,38 @@ export default class Controller {
 
 	/**
 	 * Sets the `errors` option to the endpoint.
+	 * @deprecated
 	 */
 	public static errors = (errors: Array<ErrorField>) => Controller.options({ errors });
 
 	/**
 	 * Sets the `description` option to the endpoint.
+	 * @deprecated
 	 */
 	public static description = (description: string) => Controller.options({ description });
 
 	/**
 	 * Sets the `hideDocs` option to `true` to the endpoint.
+	 * @deprecated
 	 */
 	// tslint:disable-next-line: member-ordering
 	public static hideDocs = Controller.option('hideDocs', true);
 
 	/**
 	 * Sets the `args` option to the endpoint.
+	 * @deprecated
 	 */
 	public static args = (args: Array<Field> | typeof ArgsDto) => Controller.options({ args });
 
 	/**
 	 * Sets the `requireApiKey` option to the endpoint.
+	 * @deprecated
 	 */
 	public static requireApiKey = (requireApiKey: boolean) => Controller.options({ requireApiKey });
 
 	/**
 	 * Sets the `excludeApiKey` option to the endpoint.
+	 * @deprecated
 	 */
 	public static excludeApiKeys = (excludeApiKeys: (
 		() => Promise<Array<string>>) | Array<string>,
@@ -159,16 +297,19 @@ export default class Controller {
 
 	/**
 	 * Sets the `timeout` option to the endpoint.
+	 * @deprecated
 	 */
 	public static timeout = (timeout: number) => Controller.options({ timeout });
 
 	/**
 	 * Sets the `props` option to the endpoint.
+	 * @deprecated
 	 */
 	public static props = <IProps = { [key: string]: any }>(props: IProps) => Controller.options({ props });
 
 	/**
 	 * Sets the endpoint as empty. It returns 204 status code.
+	 * @deprecated
 	 */
 	// tslint:disable-next-line: member-ordering
 	public static emptyResponse = Controller.response(null);
@@ -197,7 +338,10 @@ export default class Controller {
 					M.register(app);
 				}
 			} catch (e) {
-				// Skip if module cannot be required
+				if (file.indexOf('.js.map') >= 0 || file.indexOf('.d.ts') >= 0) {
+					continue;
+				}
+				console.error(file, e);
 			}
 		}
 	}
@@ -248,13 +392,22 @@ export default class Controller {
 
 	protected getOptions(propertyKey: string): IRouteOptions {
 		const t = this as unknown as IStore;
+		const controllerOptions = (this.constructor as any).__options__;
 		if (!t.__options__) {
 			return {};
 		}
 		if (!t.__options__[propertyKey]) {
 			return {};
 		}
-		const options = t.__options__[propertyKey];
+		let options = t.__options__[propertyKey];
+		options = {
+			...controllerOptions,
+			...options,
+			props: {
+				...controllerOptions?.props,
+				...options?.props,
+			},
+		};
 		const { args, params, response, optionalParams, omitParams, omitResponse, ...restOptions } = options;
 		return {
 			...restOptions,
