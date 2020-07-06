@@ -1,5 +1,5 @@
 
-import { Field, IRequest, RouteAuth, Type } from 'resting-squirrel';
+import { Field, IRequest, RouteAuth, Type, ErrorField } from 'resting-squirrel';
 import { BaseDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
 import Controller from '../../../src';
@@ -37,12 +37,21 @@ class TestDto extends BaseDto {
 
 // tslint:disable-next-line: max-classes-per-file
 @Controller.v(0)
-@Controller.controllerOptions({ auth: RouteAuth.OPTIONAL, props: { test: 'test' } })
+@Controller.controllerOptions({
+	auth: RouteAuth.OPTIONAL,
+	errors: [
+		new ErrorField('ERR_TEST'),
+	],
+	props: { test: 'test' },
+})
 export default class TestController extends Controller {
 
 	@Controller.Endpoint.get('/test')
 	@Controller.dto(TestDto)
 	@Controller.auth(RouteAuth.REQUIRED)
+	@Controller.errors([
+		new ErrorField('ERR_ANOTHER_TEST'),
+	])
 	public async getTest(req: IRequest<{}, TestRequestDto>): Promise<Partial<TestResponseDto>> {
 		return { status: 'get', id: req.query.id };
 	}

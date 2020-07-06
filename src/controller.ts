@@ -403,6 +403,10 @@ export default class Controller {
 		options = {
 			...controllerOptions,
 			...options,
+			errors: [
+				...(controllerOptions?.errors || []),
+				...(options?.errors || []),
+			],
 			props: {
 				...controllerOptions?.props,
 				...options?.props,
