@@ -10,7 +10,7 @@ export interface IOptions<IProps = { [key: string]: any }> {
 	errors: Array<ErrorField>;
 	hideDocs: boolean;
 	requireApiKey: boolean;
-	excludeApiKeys: (() => Promise<Array<string>>) | Array<string>;
+	excludedApiKeys: (() => Promise<Array<string>>) | Array<string>;
 	timeout: number;
 	props: IProps;
 }
