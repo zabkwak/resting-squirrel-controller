@@ -128,11 +128,11 @@ class E {
 	public static requireApiKey = (requireApiKey: boolean) => E.options({ requireApiKey });
 
 	/**
-	 * Sets the `excludeApiKey` option to the endpoint.
+	 * Sets the `excludedApiKey` option to the endpoint.
 	 */
-	public static excludeApiKeys = (excludeApiKeys: (
+	public static excludedApiKeys = (excludedApiKeys: (
 		() => Promise<Array<string>>) | Array<string>,
-	) => E.options({ excludeApiKeys })
+	) => E.options({ excludedApiKeys })
 
 	/**
 	 * Sets the `timeout` option to the endpoint.
@@ -288,12 +288,12 @@ export default class Controller {
 	public static requireApiKey = (requireApiKey: boolean) => Controller.options({ requireApiKey });
 
 	/**
-	 * Sets the `excludeApiKey` option to the endpoint.
+	 * Sets the `excludedApiKey` option to the endpoint.
 	 * @deprecated
 	 */
-	public static excludeApiKeys = (excludeApiKeys: (
+	public static excludedApiKeys = (excludedApiKeys: (
 		() => Promise<Array<string>>) | Array<string>,
-	) => Controller.options({ excludeApiKeys })
+	) => Controller.options({ excludedApiKeys })
 
 	/**
 	 * Sets the `timeout` option to the endpoint.

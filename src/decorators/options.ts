@@ -14,7 +14,7 @@ export interface IOptions<IProps = { [key: string]: any }> {
 	hideDocs: boolean;
 	args: (typeof ArgsDto) | Array<Field>;
 	requireApiKey: boolean;
-	excludeApiKeys: (() => Promise<Array<string>>) | Array<string>;
+	excludedApiKeys: (() => Promise<Array<string>>) | Array<string>;
 	timeout: number;
 	props: IProps;
 	optionalParams: Array<string>;
