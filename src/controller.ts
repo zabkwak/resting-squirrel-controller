@@ -88,7 +88,7 @@ class E {
 	 * Sets the `response` option to the endpoint using DTO classes.
 	 */
 	public static response = (
-		response: RSDtoType | typeof BaseDto | typeof ResponseDto,
+		response: RSDtoType | typeof BaseDto | typeof ResponseDto | Response.Base,
 		omit: Array<string> = [],
 	) => E.options({ response, omitResponse: omit })
 
