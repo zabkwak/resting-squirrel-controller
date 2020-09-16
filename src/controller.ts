@@ -11,6 +11,7 @@ import {
 	Param,
 	ParamShape,
 	ParamShapeArray,
+	Response,
 	RouteAuth,
 } from 'resting-squirrel';
 import RSDto, { ArgsDto, BaseDto, IRSDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
@@ -241,7 +242,7 @@ export default class Controller {
 	 * @deprecated
 	 */
 	public static response = (
-		response: RSDtoType | typeof BaseDto | typeof ResponseDto,
+		response: RSDtoType | typeof BaseDto | typeof ResponseDto | Response.Base,
 		omit: Array<string> = [],
 	) => Controller.options({ response, omitResponse: omit })
 
@@ -421,7 +422,9 @@ export default class Controller {
 					: args.toArray() as Array<Field>
 				: undefined,
 			params: this._getParamsArray(params, optionalParams, omitParams),
-			response: this._getResponseArray(response, omitResponse),
+			response: response instanceof Response.Base
+				? response
+				: this._getResponseArray(response, omitResponse),
 		};
 	}
 
