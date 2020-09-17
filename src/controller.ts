@@ -150,6 +150,12 @@ class E {
 	 */
 	// tslint:disable-next-line: member-ordering
 	public static emptyResponse = E.response(null);
+
+	/**
+	 * Sets the endpoint as deprecated.
+	 */
+	// tslint:disable-next-line: member-ordering
+	public static deprecated = deprecated;
 }
 
 // tslint:disable-next-line: max-classes-per-file
