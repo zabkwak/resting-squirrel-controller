@@ -33,7 +33,7 @@ export interface IStore {
 export interface IEndpoint {
 	method: 'get' | 'put' | 'post' | 'delete';
 	route: string;
-	callback: (req: IRequest) => void | Promise<any>;
+	callback: (req: IRequest, res: any) => void | Promise<any>;
 	propertyKey: string;
 }
 
