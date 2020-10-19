@@ -1,6 +1,6 @@
 {
 	"name": "resting-squirrel-controller",
-	"version": "2.2.2",
+	"version": "2.3.0",
 	"description": "Controller for defining endpoints in resting-squirrel.",
 	"main": "index.js",
 	"types": "./dist/index.d.ts",
