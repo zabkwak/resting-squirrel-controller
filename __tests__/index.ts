@@ -254,6 +254,15 @@ describe('HEAD method', () => {
 	});
 });
 
+describe('Redirect', () => {
+
+	it('calls the redirect endpoint', async () => {
+		const r = await fetch('http://localhost:8080/0/redirect');
+		expect(r.status).to.be.equal(200);
+		expect(r.redirected).to.be.equal(true);
+	});
+});
+
 describe('Server process stop', () => {
 
 	it('stops the server', (done) => app.stop(done));
