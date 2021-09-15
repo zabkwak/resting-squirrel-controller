@@ -20,6 +20,7 @@ export interface IOptions<IProps = { [key: string]: any }> {
 	optionalParams: Array<string>;
 	omitParams: Array<string>;
 	omitResponse: Array<string>;
+	redirect: boolean;
 }
 
 export default (options: Partial<IOptions>) => {

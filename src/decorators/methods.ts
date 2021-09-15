@@ -64,3 +64,19 @@ export const del = (endpoint: string) => {
 		return descriptor;
 	};
 };
+
+export const head = (endpoint: string) => {
+	return (target: Controller, propertyKey: string, descriptor: PropertyDescriptor) => {
+		const t: IStore = target as any;
+		if (!t.__endpoints__) {
+			t.__endpoints__ = [];
+		}
+		t.__endpoints__.push({
+			callback: (req: IRequest, res: any) => descriptor.value.apply(target, [req, res]),
+			method: 'head',
+			propertyKey,
+			route: endpoint,
+		});
+		return descriptor;
+	};
+};

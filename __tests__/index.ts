@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import * as path from 'path';
 import rs, { Error } from 'resting-squirrel';
 import RSConnector from 'resting-squirrel-connector';
+import fetch from 'node-fetch';
 
 import Controller from '../src';
 
@@ -40,7 +41,7 @@ describe('DTO v1', () => {
 				throw error;
 			}
 			expect(error).to.be.an('object');
-			expect(error).to.have.all.keys(['message', 'code']);
+			expect(error).to.have.all.keys(['message', 'code', 'stacktrace']);
 			expect(error.message).to.be.equal('The access token is missing.');
 			expect(error.code).to.be.equal('ERR_MISSING_ACCESS_TOKEN');
 			expect(error.statusCode).to.be.equal(401);
@@ -65,7 +66,7 @@ describe('DTO v1', () => {
 				throw error;
 			}
 			expect(error).to.be.an('object');
-			expect(error).to.have.all.keys(['message', 'code']);
+			expect(error).to.have.all.keys(['message', 'code', 'stacktrace']);
 			expect(error.message).to.be.equal('The access token is missing.');
 			expect(error.code).to.be.equal('ERR_MISSING_ACCESS_TOKEN');
 			expect(error.statusCode).to.be.equal(401);
@@ -90,7 +91,7 @@ describe('DTO v1', () => {
 				throw error;
 			}
 			expect(error).to.be.an('object');
-			expect(error).to.have.all.keys(['message', 'code']);
+			expect(error).to.have.all.keys(['message', 'code', 'stacktrace']);
 			expect(error.message).to.be.equal('The access token is missing.');
 			expect(error.code).to.be.equal('ERR_MISSING_ACCESS_TOKEN');
 			expect(error.statusCode).to.be.equal(401);
@@ -114,7 +115,7 @@ describe('DTO v1', () => {
 				throw error;
 			}
 			expect(error).to.be.an('object');
-			expect(error).to.have.all.keys(['message', 'code']);
+			expect(error).to.have.all.keys(['message', 'code', 'stacktrace']);
 			expect(error.message).to.be.equal('The access token is missing.');
 			expect(error.code).to.be.equal('ERR_MISSING_ACCESS_TOKEN');
 			expect(error.statusCode).to.be.equal(401);
@@ -143,7 +144,7 @@ describe('DTO v2', () => {
 				throw error;
 			}
 			expect(error).to.be.an('object');
-			expect(error).to.have.all.keys(['message', 'code']);
+			expect(error).to.have.all.keys(['message', 'code', 'stacktrace']);
 			expect(error.message).to.be.equal('The access token is missing.');
 			expect(error.code).to.be.equal('ERR_MISSING_ACCESS_TOKEN');
 			expect(error.statusCode).to.be.equal(401);
@@ -168,7 +169,7 @@ describe('DTO v2', () => {
 				throw error;
 			}
 			expect(error).to.be.an('object');
-			expect(error).to.have.all.keys(['message', 'code']);
+			expect(error).to.have.all.keys(['message', 'code', 'stacktrace']);
 			expect(error.message).to.be.equal('The access token is missing.');
 			expect(error.code).to.be.equal('ERR_MISSING_ACCESS_TOKEN');
 			expect(error.statusCode).to.be.equal(401);
@@ -193,7 +194,7 @@ describe('DTO v2', () => {
 				throw error;
 			}
 			expect(error).to.be.an('object');
-			expect(error).to.have.all.keys(['message', 'code']);
+			expect(error).to.have.all.keys(['message', 'code', 'stacktrace']);
 			expect(error.message).to.be.equal('The access token is missing.');
 			expect(error.code).to.be.equal('ERR_MISSING_ACCESS_TOKEN');
 			expect(error.statusCode).to.be.equal(401);
@@ -217,7 +218,7 @@ describe('DTO v2', () => {
 				throw error;
 			}
 			expect(error).to.be.an('object');
-			expect(error).to.have.all.keys(['message', 'code']);
+			expect(error).to.have.all.keys(['message', 'code', 'stacktrace']);
 			expect(error.message).to.be.equal('The access token is missing.');
 			expect(error.code).to.be.equal('ERR_MISSING_ACCESS_TOKEN');
 			expect(error.statusCode).to.be.equal(401);
@@ -242,6 +243,14 @@ describe('Special calls', () => {
 			prop01: 'prop_01',
 			prop02: 'prop_02',
 		});
+	});
+});
+
+describe('HEAD method', () => {
+
+	it('calls the head endpoint', async () => {
+		const { headers } = await fetch('http://localhost:8080/0/head', { method: 'HEAD' });
+		expect(headers.get('x-test')).to.be.equal('test');
 	});
 });
 

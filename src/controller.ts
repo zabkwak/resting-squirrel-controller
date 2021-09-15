@@ -18,7 +18,7 @@ import RSDto, { ArgsDto, BaseDto, IRSDto, RequestDto, ResponseDto } from 'restin
 
 import controllerOptions, { IOptions as IControllerOptions } from './decorators/controller-options';
 import deprecated from './decorators/deprecated';
-import { del, get, post, put } from './decorators/methods';
+import { del, get, head, post, put } from './decorators/methods';
 import optionsDecorator, { IOptions, RSDtoType } from './decorators/options';
 import versionDecorator from './decorators/version';
 
@@ -31,7 +31,7 @@ export interface IStore {
 }
 
 export interface IEndpoint {
-	method: 'get' | 'put' | 'post' | 'delete';
+	method: 'get' | 'put' | 'post' | 'delete' | 'head';
 	route: string;
 	callback: (req: IRequest, res: any) => void | Promise<any>;
 	propertyKey: string;
@@ -57,6 +57,11 @@ class E {
 	 * The endpoint is executed with `DELETE` method.
 	 */
 	public static delete = del;
+
+	/**
+	 * The endpoint is executed with `HEAD` method.
+	 */
+	public static head = head;
 
 	/**
 	 * Defines options to the endpoint.
@@ -156,6 +161,9 @@ class E {
 	 */
 	// tslint:disable-next-line: member-ordering
 	public static deprecated = deprecated;
+
+	// tslint:disable-next-line: member-ordering
+	public static redirect = E.options({ redirect: true });
 }
 
 // tslint:disable-next-line: max-classes-per-file

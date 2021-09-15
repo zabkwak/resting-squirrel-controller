@@ -37,8 +37,10 @@
 		"@types/core-js": "^2.5.5",
 		"@types/mocha": "^5.2.7",
 		"@types/node": "^10.17.26",
+		"@types/node-fetch": "^2.5.12",
 		"chai": "^4.2.0",
 		"mocha": "^6.2.0",
+		"node-fetch": "^2.6.2",
 		"resting-squirrel": "^2.27.0",
 		"resting-squirrel-connector": "^2.3.3",
 		"resting-squirrel-dto": "^2.0.2",
@@ -50,7 +52,7 @@
 		"typescript": "^4.4.3"
 	},
 	"peerDependencies": {
-		"resting-squirrel": "^2.18.0",
+		"resting-squirrel": "^2.27.0",
 		"resting-squirrel-dto": "^2.0.2"
 	},
 	"repository": {
