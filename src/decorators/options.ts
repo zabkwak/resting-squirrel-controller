@@ -1,4 +1,4 @@
-import { ErrorField, Field, Response, RouteAuth } from 'resting-squirrel';
+import { ErrorField, Field, Response, RouteAuth, RSError, IRouteOptions } from 'resting-squirrel';
 import { ArgsDto, BaseDto, IRSDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
 import Controller, { IStore } from '../controller';
@@ -9,7 +9,7 @@ export interface IOptions<IProps = { [key: string]: any }> {
 	auth: RouteAuth;
 	params: RSDtoType | typeof BaseDto | typeof RequestDto;
 	response: RSDtoType | typeof BaseDto | typeof ResponseDto | Response.Base;
-	errors: Array<ErrorField>;
+	errors?: IRouteOptions['errors'],
 	description: string;
 	hideDocs: boolean;
 	args: (typeof ArgsDto) | Array<Field>;

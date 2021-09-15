@@ -1,6 +1,6 @@
 {
 	"name": "resting-squirrel-controller",
-	"version": "2.4.0",
+	"version": "2.4.1",
 	"description": "Controller for defining endpoints in resting-squirrel.",
 	"main": "index.js",
 	"types": "./dist/index.d.ts",
@@ -41,7 +41,7 @@
 		"chai": "^4.2.0",
 		"mocha": "^6.2.0",
 		"node-fetch": "^2.6.2",
-		"resting-squirrel": "^2.27.0",
+		"resting-squirrel": "^2.27.1",
 		"resting-squirrel-connector": "^2.3.3",
 		"resting-squirrel-dto": "^2.0.2",
 		"run-script-os-fix": "^1.0.4",

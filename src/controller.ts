@@ -13,6 +13,7 @@ import {
 	ParamShapeArray,
 	Response,
 	RouteAuth,
+	RSError,
 } from 'resting-squirrel';
 import RSDto, { ArgsDto, BaseDto, IRSDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
@@ -110,7 +111,7 @@ class E {
 	/**
 	 * Sets the `errors` option to the endpoint.
 	 */
-	public static errors = (errors: Array<ErrorField>) => E.options({ errors });
+	public static errors = (errors: IOptions['errors']) => E.options({ errors });
 
 	/**
 	 * Sets the `description` option to the endpoint.
@@ -275,7 +276,7 @@ export default class Controller {
 	 * Sets the `errors` option to the endpoint.
 	 * @deprecated
 	 */
-	public static errors = (errors: Array<ErrorField>) => Controller.options({ errors });
+	public static errors = (errors: IOptions['errors']) => Controller.options({ errors });
 
 	/**
 	 * Sets the `description` option to the endpoint.
