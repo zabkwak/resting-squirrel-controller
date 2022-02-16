@@ -263,6 +263,19 @@ describe('Redirect', () => {
 	});
 });
 
+describe('Resource', () => {
+
+	it('calls get resource', async () => {
+		const r = await fetch('http://localhost:8080/0/resource/1');
+		expect(r.status).to.be.equal(204);
+	});
+
+	it('calls post resource', async () => {
+		const r = await fetch('http://localhost:8080/0/resource', { method: 'POST' });
+		expect(r.status).to.be.equal(204);
+	});
+});
+
 describe('Server process stop', () => {
 
 	it('stops the server', (done) => app.stop(done));

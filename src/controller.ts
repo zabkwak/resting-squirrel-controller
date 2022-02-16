@@ -2,25 +2,25 @@ import * as path from 'path';
 import {
 	Application,
 	Endpoint,
-	ErrorField,
 	Field,
 	FieldShape,
 	FieldShapeArray,
 	IRequest,
+	IResponse,
 	IRouteOptions,
 	Param,
 	ParamShape,
 	ParamShapeArray,
 	Response,
 	RouteAuth,
-	RSError,
 } from 'resting-squirrel';
-import RSDto, { ArgsDto, BaseDto, IRSDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
+import RSDto, { ArgsDto, BaseDto, RequestDto, ResponseDto } from 'resting-squirrel-dto';
 
-import controllerOptions, { IOptions as IControllerOptions } from './decorators/controller-options';
+import controllerOptions from './decorators/controller-options';
 import deprecated from './decorators/deprecated';
 import { del, get, head, post, put } from './decorators/methods';
 import optionsDecorator, { IOptions, RSDtoType } from './decorators/options';
+import resourceDecorator from './decorators/resource';
 import versionDecorator from './decorators/version';
 
 import { fs, requireModule } from './utils';
@@ -183,6 +183,8 @@ export default class Controller {
 	public static v = Controller.version;
 
 	public static controllerOptions = controllerOptions;
+
+	public static resource = resourceDecorator;
 
 	public static Endpoint = E;
 
@@ -380,14 +382,14 @@ export default class Controller {
 				e = this._app.registerRoute(
 					endpoint.method,
 					version,
-					endpoint.route,
+					this.getRoute(endpoint.route),
 					this.getOptions(endpoint.propertyKey),
 					endpoint.callback,
 				);
 			} else {
 				e = this._app.registerRoute(
 					endpoint.method,
-					endpoint.route,
+					this.getRoute(endpoint.route),
 					this.getOptions(endpoint.propertyKey),
 					endpoint.callback,
 				);
@@ -398,12 +400,18 @@ export default class Controller {
 		}
 	}
 
+	public async beforeExecution(req: IRequest, res: IResponse): Promise<void> { }
+
 	protected getEndpoints(): Array<IEndpoint> {
 		return (this as unknown as IStore).__endpoints__ || [];
 	}
 
 	protected getVersion(): number {
 		return (this.constructor as any).__version__;
+	}
+
+	protected getResource(): string {
+		return (this.constructor as any).__resource__;
 	}
 
 	protected getOptions(propertyKey: string): IRouteOptions {
@@ -449,7 +457,20 @@ export default class Controller {
 			return false;
 		}
 		return t.__deprecated__.includes(propertyKey);
+	}
 
+	protected getRoute(route: string): string {
+		let resource = this.getResource();
+		if (!resource) {
+			return route;
+		}
+		if (resource.indexOf('/') !== 0) {
+			resource = `/${resource}`;
+		}
+		if (route.indexOf('/') !== 0) {
+			route = `/${route}`;
+		}
+		return `${resource}${route}`;
 	}
 
 	private _getParamsArray(

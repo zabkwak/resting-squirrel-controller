@@ -8,7 +8,10 @@ export const put = (endpoint: string) => {
 			t.__endpoints__ = [];
 		}
 		t.__endpoints__.push({
-			callback: (req: IRequest, res: any) => descriptor.value.apply(target, [req, res]),
+			callback: async (req: IRequest, res: any) => {
+				await target.beforeExecution(req, res);
+				return descriptor.value.apply(target, [req, res])
+			},
 			method: 'put',
 			propertyKey,
 			route: endpoint,
@@ -24,7 +27,10 @@ export const get = (endpoint: string) => {
 			t.__endpoints__ = [];
 		}
 		t.__endpoints__.push({
-			callback: (req: IRequest, res: any) => descriptor.value.apply(target, [req, res]),
+			callback: async (req: IRequest, res: any) => {
+				await target.beforeExecution(req, res);
+				return descriptor.value.apply(target, [req, res])
+			},
 			method: 'get',
 			propertyKey,
 			route: endpoint,
@@ -40,7 +46,10 @@ export const post = (endpoint: string) => {
 			t.__endpoints__ = [];
 		}
 		t.__endpoints__.push({
-			callback: (req: IRequest, res: any) => descriptor.value.apply(target, [req, res]),
+			callback: async (req: IRequest, res: any) => {
+				await target.beforeExecution(req, res);
+				return descriptor.value.apply(target, [req, res])
+			},
 			method: 'post',
 			propertyKey,
 			route: endpoint,
@@ -56,7 +65,10 @@ export const del = (endpoint: string) => {
 			t.__endpoints__ = [];
 		}
 		t.__endpoints__.push({
-			callback: (req: IRequest, res: any) => descriptor.value.apply(target, [req, res]),
+			callback: async (req: IRequest, res: any) => {
+				await target.beforeExecution(req, res);
+				return descriptor.value.apply(target, [req, res])
+			},
 			method: 'delete',
 			propertyKey,
 			route: endpoint,
@@ -72,7 +84,10 @@ export const head = (endpoint: string) => {
 			t.__endpoints__ = [];
 		}
 		t.__endpoints__.push({
-			callback: (req: IRequest, res: any) => descriptor.value.apply(target, [req, res]),
+			callback: async (req: IRequest, res: any) => {
+				await target.beforeExecution(req, res);
+				return descriptor.value.apply(target, [req, res])
+			},
 			method: 'head',
 			propertyKey,
 			route: endpoint,
