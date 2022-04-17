@@ -336,6 +336,9 @@ export default class Controller {
 
 	// #endregion
 
+	// tslint:disable-next-line: member-ordering
+	private static _controllers: Controller[] = [];
+
 	/**
 	 * Registers all found controllers in the directory to the application.
 	 *
@@ -368,10 +371,15 @@ export default class Controller {
 		new this(app).register();
 	}
 
+	public static getControllers(): Controller[] {
+		return this._controllers;
+	}
+
 	private _app: Application;
 
 	constructor(app: Application) {
 		this._app = app;
+		Controller._controllers.push(this);
 	}
 
 	public register(): void {
@@ -402,19 +410,19 @@ export default class Controller {
 
 	public async beforeExecution(req: IRequest, res: IResponse): Promise<void> { }
 
-	protected getEndpoints(): Array<IEndpoint> {
+	public getEndpoints(): Array<IEndpoint> {
 		return (this as unknown as IStore).__endpoints__ || [];
 	}
 
-	protected getVersion(): number {
+	public getVersion(): number {
 		return (this.constructor as any).__version__;
 	}
 
-	protected getResource(): string {
+	public getResource(): string {
 		return (this.constructor as any).__resource__;
 	}
 
-	protected getOptions(propertyKey: string): IRouteOptions {
+	public getOptions(propertyKey: string): IRouteOptions {
 		const t = this as unknown as IStore;
 		const controllerOptions = (this.constructor as any).__options__;
 		if (!t.__options__) {
@@ -451,7 +459,7 @@ export default class Controller {
 		};
 	}
 
-	protected isDeprecated(propertyKey: string): boolean {
+	public isDeprecated(propertyKey: string): boolean {
 		const t = this as unknown as IStore;
 		if (!t.__deprecated__) {
 			return false;
@@ -459,7 +467,7 @@ export default class Controller {
 		return t.__deprecated__.includes(propertyKey);
 	}
 
-	protected getRoute(route: string): string {
+	public getRoute(route: string): string {
 		let resource = this.getResource();
 		if (!resource) {
 			return route;
